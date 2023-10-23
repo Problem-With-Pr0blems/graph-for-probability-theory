@@ -6,19 +6,26 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
+    
     <div class="wrapper">
         <input type="text" class="nNum" placeholder="N">
         <input type="text" class="mNum" placeholder="M">
         <input type="text" class="procent" placeholder="procent">
         <button class="do">RUN</button>
-        <div class="container"><div class="orel"></div></div>
+        
+        <h2><a href="https://github.com/VIndsudefe/graph-for-probability-theory">https://github.com/VIndsudefe/graph-for-probability-theory</a></h2>
     </div>
-    
-    
-    <div class="rara"></div>
+
+    <canvas id="gaussianChart" width="400" height="200"></canvas>
+    <canvas id="barChart" width="400" height="200"></canvas>
+    <div class="orel">
+
+    </div>
     
 </body>
 <script src="app.js"> </script>
