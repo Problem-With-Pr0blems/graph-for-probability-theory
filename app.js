@@ -39,22 +39,28 @@ work.onclick = () => {
     for (let i of resultArray) {
         finalAnswer.push(i.length)
     }
-    let answ=0
+    let answ = 0
 
-    for (let i of finalAnswer){
-        answ=answ+i
+    for (let i of finalAnswer) {
+        answ = answ + i
     }
     console.log(answ);
 
-    
     let ctxGaussian = document.getElementById('gaussianChart').getContext('2d');
-    let ctxBar = document.getElementById('barChart').getContext('2d')
+    let ctxBar = document.getElementById('barChart').getContext('2d');
+    const xValues = finalAnswer.map((_, index) => index);
+    console.log(xValues);
+    const u = finalAnswer.indexOf(Math.max(...finalAnswer)); 
+    const o = nNum.value/ 13; 
+
+    const gaussianValues = xValues.map(x => gaussian(x, u, o));
+
     let gaussianChart = new Chart(ctxGaussian, {
         type: 'line',
         data: {
-            labels: finalAnswer.map((_, index) => index),
+            labels: xValues,
             datasets: [{
-                data: finalAnswer,
+                data: gaussianValues,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
             }]
@@ -79,10 +85,10 @@ work.onclick = () => {
     let barChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: finalAnswer.map((_, index) => index),
+            labels: xValues,
             datasets: [{
                 data: finalAnswer,
-                
+
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
             }]
@@ -108,3 +114,6 @@ work.onclick = () => {
     orel.innerHTML = '';
 }
 
+function gaussian(x, u, o) {
+    return Math.exp(-((x - u) ** 2) / (2 * o ** 2)) / (o * Math.sqrt(2 * Math.PI));
+}
