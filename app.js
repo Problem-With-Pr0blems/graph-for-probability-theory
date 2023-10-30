@@ -25,35 +25,26 @@ work.onclick = () => {
         arr0.push(answer0);
     }
 
-    const uniqueNumbers = Array.from(new Set(arr0));
-    const resultArray = [];
+    const uniqueNumbers = [...new Set(arr0)];
+    const resultArray = Array.from({ length: Number(nNum.value) + 1 }, () => []);
 
-    for (let i = 0; i <= Number(nNum.value); i++) {
-        if (uniqueNumbers.includes(i)) {
-            resultArray[i] = arr0.filter(item => item === i);
-        } else {
-            resultArray[i] = [];
-        }
+    for (let i = 0; i < arr0.length; i++) {
+        resultArray[arr0[i]].push(arr0[i]);
     }
-    let finalAnswer = []
-    for (let i of resultArray) {
-        finalAnswer.push(i.length)
-    }
-    let answ = 0
 
-    for (let i of finalAnswer) {
-        answ = answ + i
-    }
+    let finalAnswer = resultArray.map(arr => arr.length);
+    let answ = finalAnswer.reduce((acc, val) => acc + val, 0);
     console.log(answ);
 
     let ctxGaussian = document.getElementById('gaussianChart').getContext('2d');
     let ctxBar = document.getElementById('barChart').getContext('2d');
     const xValues = finalAnswer.map((_, index) => index);
-    console.log(xValues);
-    const u = finalAnswer.indexOf(Math.max(...finalAnswer)); 
-    const o = nNum.value/ 13; 
 
-    const gaussianValues = xValues.map(x => gaussian(x, u, o));
+    
+    const u = finalAnswer.indexOf(Math.max(...finalAnswer));
+    const universalSigma = calculateUniversalSigma(finalAnswer);
+    
+    const gaussianValues = xValues.map(x => gaussian(x, u, universalSigma));
 
     let gaussianChart = new Chart(ctxGaussian, {
         type: 'line',
@@ -81,16 +72,16 @@ work.onclick = () => {
                 }
             }
         }
-    })
+    });
+
     let barChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
             labels: xValues,
             datasets: [{
                 data: finalAnswer,
-
                 borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
+                borderWidth: 1,
             }]
         },
         options: {
@@ -109,11 +100,19 @@ work.onclick = () => {
                 }
             }
         }
-    })
+    });
+
     let orel = document.querySelector('.orel');
     orel.innerHTML = '';
+};
+
+function gaussian(x, u, universalSigma) {
+    return Math.exp(-((x - u) ** 2) / (2 * universalSigma ** 2)) / (universalSigma * Math.sqrt(2 * Math.PI));
 }
 
-function gaussian(x, u, o) {
-    return Math.exp(-((x - u) ** 2) / (2 * o ** 2)) / (o * Math.sqrt(2 * Math.PI));
+
+function calculateUniversalSigma(data) {
+    const mean = data.reduce((acc, val, i) => acc + val * i, 0) / data.reduce((acc, val) => acc + val, 0);
+    const variance = data.reduce((acc, val, i) => acc + (i - mean) * (i - mean) * val, 0) / data.reduce((acc, val) => acc + val, 0);
+    return Math.sqrt(variance);
 }
